@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akari Bot Status</title>
+    <link rel="stylesheet" href="status.css">
+
+</head>
+<body>
+    <div class="top-nav">
+        <a href="/" class="nav-item">Home</a>
+        <a href="/status.html" class="nav-item">Status</a>
+        <a href="commands.html" class="nav-item">Commands</a>
+        <a href="tos.html" class="nav-item">Terms of Service</a>
+        <a href="privacy.html" class="nav-item">Privacy Policy</a>
+        <a href="https://discord.gg/akaribot" class="nav-item join-discord" target="_blank">Join Discord Server</a>
+    </div>
+    <div id="particles-js"></div>
+    <h1 id="title">Akari Bot Status</h1>
+    <div id="shardContainer" class="shard-container">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particles-js', 'particles-config.json', function() {
+            console.log('particles.js loaded - callback');
+        });
+
+        async function fetchShardData() {
+            try {
+                const response = await fetch('https://api.akari.bot/shards/get');
+                const data = await response.json();
+                displayShardData(data.shards);
+            } catch (error) {
+                console.error('Error fetching shard data:', error);
+            }
+        }
+
+        function displayShardData(shards) {
+            const shardContainer = document.getElementById('shardContainer');
+            shardContainer.innerHTML = '';
+
+            shards.forEach(shard => {
+                const shardBox = document.createElement('div');
+                shardBox.className = 'shard-box';
+                shardBox.innerHTML = `
+                    <h2>Shard ${shard.shard_id}</h2>
+                    <p>Server Count: <span>${shard.server_count}</span></p>
+                    <p>Member Count: <span>${shard.member_count}</span></p>
+                    <p>Uptime: <span>${shard.uptime}</span></p>
+                    <p>Latency: <span>${(shard.latency.toFixed(3) * 1000)} ms</span></p>
+                    <p>Last Updated: <span>${new Date(shard.last_updated).toLocaleString()}</span></p>
+                `;
+                shardContainer.appendChild(shardBox);
+            });
+        }
+
+        fetchShardData();
+    </script>
+</body>
+</html>
