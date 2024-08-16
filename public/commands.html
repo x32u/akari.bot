@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akari Bot Commands</title>
+    <link rel="stylesheet" href="commands.css">
+</head>
+<body>
+    <div class="top-nav">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="commands.html" class="nav-item">Commands</a>
+        <a href="tos.html" class="nav-item">Terms of Service</a>
+        <a href="privacy.html" class="nav-item">Privacy Policy</a>
+    </div>
+
+    <div id="particles-js"></div>
+
+    <div class="content">
+        <h1>Akari Bot Commands</h1>
+        <div class="menu-bar">
+            <a href="#donor" class="menu-item">
+                <div class="icon">💰</div>
+                Donor
+            </a>
+            <a href="#music" class="menu-item">
+                <div class="icon">🎵</div>
+                Music
+            </a>
+            <a href="#utility" class="menu-item">
+                <div class="icon">🛠️</div>
+                Utility
+            </a>
+            <a href="#config" class="menu-item">
+                <div class="icon">⚙️</div>
+                Config
+            </a>
+            <a href="#fun" class="menu-item">
+                <div class="icon">😛</div>
+                Fun
+            </a>
+            <a href="#emoji" class="menu-item">
+                <div class="icon">🤡</div>
+                Emoji
+            </a>
+            <a href="#economy" class="menu-item">
+                <div class="icon">💸</div>
+                Economy
+            </a>
+            <a href="#info" class="menu-item">
+                <div class="icon">ℹ️</div>
+                Info
+            </a>
+            <a href="#leveling" class="menu-item">
+                <div class="icon">🎚️</div>
+                Leveling
+            </a>
+            <a href="#antinuke" class="menu-item">
+                <div class="icon">🎚️</div>
+                Antinuke
+            </a>
+            <a href="#voicemaster" class="menu-item">
+                <div class="icon">💣</div>
+                VoiceMaster
+            </a>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search commands...">
+        </div>
+        <div class="command-list">
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particles-js', 'particles-config.json', function() {
+            console.log('Particles.js config loaded');
+        });
+        const hiddenCategories = ['Owner', 'Jishaku', 'Auth'];
+        fetch('commands.json')
+            .then(response => response.json())
+            .then(data => {
+                renderCommands(data);
+                addSearchFunctionality(data);
+            });
+
+        function renderCommands(commands) {
+            const container = document.querySelector('.command-list');
+            container.innerHTML = '';
+            for (const category in commands) {
+                if (hiddenCategories.includes(category)) {
+                    continue;
+                }
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.classList.add('category');
+                categoryDiv.id = category.toLowerCase();
+                
+                const categoryTitle = document.createElement('h2');
+                categoryTitle.textContent = category;
+                categoryDiv.appendChild(categoryTitle);
+                
+                commands[category].forEach(command => {
+                    const commandItem = document.createElement('div');
+                    commandItem.classList.add('command-item');
+                    
+                    const commandName = document.createElement('h3');
+                    commandName.textContent = command.name;
+                    commandItem.appendChild(commandName);
+                    
+                    const commandHelp = document.createElement('p');
+                    commandHelp.textContent = command.help || 'No description provided';
+                    commandItem.appendChild(commandHelp);
+                    
+                    categoryDiv.appendChild(commandItem);
+                });
+                if (categoryDiv.querySelector('.command-item')) {
+                    container.appendChild(categoryDiv);
+                }
+            }
+        }
+
+        function addSearchFunctionality(commands) {
+            const searchInput = document.querySelector('.search-bar input');
+            searchInput.addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                const container = document.querySelector('.command-list');
+                container.innerHTML = '';
+
+                for (const category in commands) {
+                    if (hiddenCategories.includes(category)) {
+                        continue;
+                    }
+
+                    const filteredCommands = commands[category].filter(command => 
+                        command.name.toLowerCase().includes(filter) || 
+                        (command.help && command.help.toLowerCase().includes(filter))
+                    );
+
+                    if (filteredCommands.length > 0) {
+                        const categoryDiv = document.createElement('div');
+                        categoryDiv.classList.add('category');
+                        categoryDiv.id = category.toLowerCase();
+
+                        const categoryTitle = document.createElement('h2');
+                        categoryTitle.textContent = category;
+                        categoryDiv.appendChild(categoryTitle);
+
+                        filteredCommands.forEach(command => {
+                            const commandItem = document.createElement('div');
+                            commandItem.classList.add('command-item');
+                            
+                            const commandName = document.createElement('h3');
+                            commandName.textContent = command.name;
+                            commandItem.appendChild(commandName);
+                            
+                            const commandHelp = document.createElement('p');
+                            commandHelp.textContent = command.help || 'No description provided';
+                            commandItem.appendChild(commandHelp);
+                            
+                            categoryDiv.appendChild(commandItem);
+                        });
+
+                        container.appendChild(categoryDiv);
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
