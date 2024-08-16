@@ -45,7 +45,16 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
 }
+.top-nav .join-discord {
+    background-color: #7289DA;
+    padding: 10px 30px;
+    font-weight: bold;
+    border-radius: 30px;
+}
 
+.top-nav .join-discord:hover {
+    background-color: #5b6eae;
+}
 header {
     text-align: center;
     padding: 120px 20px 50px;
